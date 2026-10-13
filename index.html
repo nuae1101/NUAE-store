@@ -40,12 +40,12 @@
 <details><summary>送料はいくらですか？</summary><p>北海道・沖縄・離島を含め全国一律660円（税込）。商品小計11,000円（税込）以上で送料無料です。</p></details>
 <details><summary>いつ発送されますか？</summary><p>決済完了後、原則3営業日以内（土日祝を除く）に発送します。</p></details>
 <details><summary>返品・交換はできますか？</summary><p>お客様都合による返品・交換は原則お受けしていません。商品不良や誤配送の場合は到着後7日以内にご連絡ください。返送料は当社が負担します。法令上必要な対応はこの限りではありません。</p></details>
-<details><summary>今すぐ購入できますか？</summary><p>現在は販売準備中です。カートはお試しいただけますが、注文・決済はまだ受け付けていません。</p></details>
+<details><summary>今すぐ購入できますか？</summary><p>現在は販売準備中です。カートはお試しいただけますが、決済機能の接続設定中です。</p></details>
 </section>
 <section class="story"><div class="eyebrow">NUAE HAIR CARE</div><h2>Care, in your own rhythm.</h2><p>nuance and ease — ニュアンスと心地よさ。<br>つくり込みすぎず、自然体のまま美しく整うこと。</p></section>
-<div class="notice">送料は通常660円（税込）、商品小計11,000円（税込）以上で送料無料です。現在は公開デザインの確認段階で、決済・注文受付はまだ開始していません。商品の効能や成分、配送・返品条件などは正式販売前に掲載します。</div></main>
+<div class="notice">送料は通常660円（税込）、商品小計11,000円（税込）以上で送料無料です。現在は決済連携の準備中で、注文受付はまだ開始していません。商品の効能や成分、配送・返品条件などは正式販売前に掲載します。</div></main>
 <footer><div>© NUAE HAIR CARE</div><div><a href="#" onclick="showInfo('law');return false">特定商取引法に基づく表記</a><a href="#" onclick="showInfo('privacy');return false">プライバシーポリシー</a><a href="#" onclick="showInfo('shipping');return false">配送・返品について</a></div></footer>
-<div class="overlay" id="overlay" onclick="closeCart()"><aside class="drawer" role="dialog" aria-label="ショッピングバッグ" onclick="event.stopPropagation()"><div class="drawer-head"><span>SHOPPING BAG (<span id="drawerCount">0</span>)</span><button class="close" onclick="closeCart()" aria-label="閉じる">×</button></div><div class="cart-items" id="items"></div><div class="totals"><div class="total-line"><span>商品小計（税込）</span><strong id="total">¥0</strong></div><div class="total-line"><span>送料（税込）</span><strong id="shipping">¥0</strong></div><div class="total-line" style="margin-top:10px;border-top:1px solid var(--line);padding-top:10px"><strong>合計（税込）</strong><strong id="grandTotal">¥0</strong></div><p class="fine">通常送料660円（税込）。商品小計11,000円（税込）以上で送料無料。商品未選択時の送料は0円です。注文・決済機能は準備中です。</p><button class="checkout" id="reviewButton" onclick="showReview()" style="cursor:pointer;background:var(--ink)">ご注文内容を確認する →</button></div></aside></div>
+<div class="overlay" id="overlay" onclick="closeCart()"><aside class="drawer" role="dialog" aria-label="ショッピングバッグ" onclick="event.stopPropagation()"><div class="drawer-head"><span>SHOPPING BAG (<span id="drawerCount">0</span>)</span><button class="close" onclick="closeCart()" aria-label="閉じる">×</button></div><div class="cart-items" id="items"></div><div class="totals"><div class="total-line"><span>商品小計（税込）</span><strong id="total">¥0</strong></div><div class="total-line"><span>送料（税込）</span><strong id="shipping">¥0</strong></div><div class="total-line" style="margin-top:10px;border-top:1px solid var(--line);padding-top:10px"><strong>合計（税込）</strong><strong id="grandTotal">¥0</strong></div><p class="fine">通常送料660円（税込）。商品小計11,000円（税込）以上で送料無料。商品未選択時の送料は0円です。決済機能の接続設定中です。</p><button class="checkout" id="reviewButton" onclick="showReview()" style="cursor:pointer;background:var(--ink)">ご注文内容を確認する →</button><button class="add" id="stripeCheckoutButton" style="margin-top:10px" onclick="startStripeCheckout()">お支払いへ進む →</button></div></aside></div>
 <div class="modal" id="modal" onclick="hideInfo()"><div class="modal-inner" onclick="event.stopPropagation()"><button class="close" style="float:right" onclick="hideInfo()">×</button><h2 id="modalTitle"></h2><p id="modalBody"></p></div></div>
 <script>
 const products=[{name:'Shampoo 380mL',price:4400},{name:'Treatment 380mL',price:4400},{name:'Shampoo Refill 600mL',price:6600},{name:'Treatment Refill 600mL',price:6600}];
@@ -60,9 +60,31 @@ if(!subtotal)return;
 const shipping=subtotal>=11000?0:660;
 const lines=products.map((p,i)=>cart[i]?p.name+' × '+cart[i]+'　'+yen(cart[i]*p.price):'').filter(Boolean);
 document.getElementById('modalTitle').textContent='ご注文内容の確認';
-document.getElementById('modalBody').textContent=lines.join('\n')+'\n\n商品小計　'+yen(subtotal)+'\n送料（全国一律）　'+yen(shipping)+'\nお支払い予定額　'+yen(subtotal+shipping)+'\n\n※ 現在は販売準備中です。これは注文内容の確認画面であり、注文確定・決済・お客様情報の送信は行われません。';
+document.getElementById('modalBody').textContent=lines.join('\n')+'\n\n商品小計　'+yen(subtotal)+'\n送料（全国一律）　'+yen(shipping)+'\nお支払い予定額　'+yen(subtotal+shipping)+'\n\n※ この確認画面では注文は確定しません。決済は「お支払いへ進む」から行います。';
 document.getElementById('modal').classList.add('open');
 }
-const info={law:['特定商取引法に基づく表記','販売事業者：株式会社noii\n運営統括責任者：大嶽和士\n所在地：愛知県名古屋市中区錦2-9-21 IE伏見1A\n電話：052-684-8106\nメール：info@noii-official.com\n販売価格：各商品ページに税込表示\n送料：全国一律660円（税込）、商品小計11,000円（税込）以上で送料無料\n発送：決済完了後3営業日以内（土日祝を除く）\n返品：お客様都合による返品・交換は原則不可。商品不良・誤配送の場合は到着後7日以内にご連絡ください。返送料は当社負担。法令上必要な対応はこの限りではありません。\n支払方法・支払時期：決済導入時に確定・掲載予定。現在は注文受付を行っていません。'],privacy:['プライバシーポリシー','正式販売開始前に、取得する個人情報・利用目的・管理方法・お問い合わせ窓口などを確定して記載します。現在、このサイトは注文者情報を収集しません。カート内容は端末内のブラウザ保存領域に保持されます。'],shipping:['配送・返品について','送料は通常660円（税込）、商品小計11,000円（税込）以上で送料無料です。北海道・沖縄・離島を含め全国一律です。決済完了後3営業日以内（土日祝を除く）に発送します。お客様都合の返品・交換は原則不可。不良品・誤配送は到着後7日以内にご連絡ください。返送料は当社負担。法令上必要な対応はこの限りではありません。']};
+const info={law:['特定商取引法に基づく表記','販売事業者：大嶽和士（屋号：NUAE）\n運営統括責任者：大嶽和士\n所在地：愛知県名古屋市中区錦2-9-21 IE伏見1A\n電話：052-684-8106\nメール：info@noii-official.com\n販売価格：各商品ページに税込表示\n送料：全国一律660円（税込）、商品小計11,000円（税込）以上で送料無料\n発送：決済完了後3営業日以内（土日祝を除く）\n返品：お客様都合による返品・交換は原則不可。商品不良・誤配送の場合は到着後7日以内にご連絡ください。返送料は当社負担。法令上必要な対応はこの限りではありません。\n支払方法・支払時期：決済導入時に確定・掲載予定。現在は注文受付を行っていません。'],privacy:['プライバシーポリシー','正式販売開始前に、取得する個人情報・利用目的・管理方法・お問い合わせ窓口などを確定して記載します。現在、このサイトは注文者情報を収集しません。カート内容は端末内のブラウザ保存領域に保持されます。'],shipping:['配送・返品について','送料は通常660円（税込）、商品小計11,000円（税込）以上で送料無料です。北海道・沖縄・離島を含め全国一律です。決済完了後3営業日以内（土日祝を除く）に発送します。お客様都合の返品・交換は原則不可。不良品・誤配送は到着後7日以内にご連絡ください。返送料は当社負担。法令上必要な対応はこの限りではありません。']};
 const detailData=[["SHAMPOO", "高密度の泡で、潤いとまとまりのある髪へ。リンゴ果実培養細胞エキス（保湿成分）配合。髪と頭皮をすこやかに保ちます。", "水、グリセリン、ココイルメチルタウリンＮａ、ラウロイルメチルアラニンＮａ、ラウラミドプロピルベタイン、コカミドプロピルベタイン、ジマレイン酸プロピレンジアンモニウム、リンゴ果実培養細胞エキス、加水分解ケラチン（羊毛）、加水分解ウールキューティクルタンパク、セラミドＮＧ、クララ根エキス、加水分解シルク、加水分解コラーゲン、リンゴ酸、ＰＣＡ－Ｎａ、ジグリセリン、ＢＧ、ＤＰＧ、ペンチレングリコール、ポリクオタニウム－１０、レシチン、デシルグルコシド、セテアレス－６０ミリスチルグリコール、ＰＰＧ－４セテス－２０、コカミドＭＥＡ、ラウロイルアスパラギン酸Ｎａ、キサンタンガム、塩化Ｎａ、ＥＤＴＡ－２Ｎａ、フェノキシエタノール、安息香酸Ｎａ、香料"], ["TREATMENT", "濃密補修で、ツヤとまとまりのある髪へ。γ－ドコサラクトン（毛髪補修成分）を配合し、ドライヤーなどの熱を利用したヘアケアをサポートします。", "水、ジメチコン、セテアリルアルコール、グリセリン、ベヘントリモニウムクロリド、水添ポリイソブテン、アモジメチコン、ジマレイン酸プロピレンジアンモニウム、γ－ドコサラクトン、加水分解ケラチン（羊毛）、加水分解ウールキューティクルタンパク、セラミドＮＧ、イソアルキル（Ｃ１０－４０）アミドプロピルエチルジモニウムエトサルフェート、加水分解コメタンパク、アルギニン、アスパラギン酸、グリシン、アラニン、セリン、バリン、プロリン、トレオニン、イソロイシン、ヒスチジン、フェニルアラニン、リンゴ酸、ヒアルロン酸Ｎａ、コメヌカ油、テトラエチルヘキサン酸ペンタエリスリチル、トリ（カプリル酸／カプリン酸）グリセリル、セタノール、ＰＣＡ－Ｎａ、ＰＣＡ、ＢＧ、ＤＰＧ、ペンチレングリコール、イソプロパノール、ビスジグリセリルポリアシルアジペート－２、ＰＰＧ－４セテス－２０、ベヘントリモニウムメトサルフェート、ステアルトリモニウムクロリド、ジアルキル（Ｃ１２－１８）ジモニウムクロリド、乳酸Ｎａ、アミノプロピルジメチコン、ジメチコノール、ＥＤＴＡ－２Ｎａ、安息香酸Ｎａ、香料"]];function showProduct(i){const d=detailData[i%2];document.getElementById('modalTitle').textContent=d[0]+(i>=2?' — 600mL REFILL':' — 380mL');document.getElementById('modalBody').textContent=d[1]+'\n\nNOBLE PEARの香り\n\n全成分（メーカー提供の暫定成分表。正式販売前に最終確認が必要）\n'+d[2];document.getElementById('modal').classList.add('open')}function showInfo(key){document.getElementById('modalTitle').textContent=info[key][0];document.getElementById('modalBody').textContent=info[key][1];document.getElementById('modal').classList.add('open')}function hideInfo(){document.getElementById('modal').classList.remove('open')}document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCart();hideInfo()}});render();
+
+const CHECKOUT_API_URL = ''; // Cloudflare Workerを公開後、そのURLを設定
+async function startStripeCheckout(){
+  const entries=cart.map((quantity,id)=>({id,quantity})).filter(x=>x.quantity>0);
+  if(!entries.length)return;
+  if(!CHECKOUT_API_URL){
+    alert('現在、決済の接続設定中です。もうしばらくお待ちください。');
+    return;
+  }
+  const button=document.getElementById('stripeCheckoutButton');
+  button.disabled=true;button.textContent='決済画面へ移動しています…';
+  try{
+    const response=await fetch(CHECKOUT_API_URL+'/checkout',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({items:entries})
+    });
+    const data=await response.json();
+    if(!response.ok||!data.url)throw new Error(data.error||'決済を開始できませんでした');
+    location.assign(data.url);
+  }catch(err){alert(err.message||'通信エラーが発生しました')}
+  finally{button.disabled=false;button.textContent='お支払いへ進む →'}
+}
 </script></body></html>
